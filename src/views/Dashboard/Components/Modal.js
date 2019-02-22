@@ -4,43 +4,45 @@ import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter , Row, Col} from 'reactstrap';
 import Select from 'react-select';
 
-const options = [
-    { value: 'option1', label: 'option1' },
-    { value: 'option2', label: 'option2' },
-    { value: 'option3', label: 'option3' }
-  ];
-
 class ModalAddNew extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
-      selectedOption: null,
+      selectedOption: {},
     };
-
     this.toggle = this.toggle.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   toggle(mode) {
-      this.props.onExitModal(mode);
+    //console.log(`=======>:`, this.state.selectedOption);
+    this.props.onExitModal(mode,this.state.selectedOption);
   }
 
   handleChange = (selectedOption) => {
-    this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
+    console.log(`Option selected1:`, selectedOption);
+    let tmpSelected = this.state.selectedOption;
+  
+    tmpSelected[selectedOption.dim]=selectedOption.value;
+    console.log(`Option selected2:`, tmpSelected);
+    this.setState({ tmpSelected });
+    console.log(`Option selected3:`, selectedOption);
   }
 
   render() {
     const { selectedOption } = this.state;
-    let {isOpen, dimensions} = this.props;
-    console.log("isOpen", isOpen);
-    const content = dimensions.map(item=>{
-        console.log("item.headerName", item.headerName)
+    let {isOpen, dimensions, data} = this.props;
+    console.log("data", data);
+    const content = dimensions.map((item,i)=>{
+        console.log("item.field", item.field)
+        let options =  data[item.field];
+        let xxx=item.field;
             return(
-            <div>
+            <div key ={i}>
                 {item.headerName}
                 <Select
-                    value={selectedOption}
+                    value={selectedOption.xxx}
                     onChange={this.handleChange}
                     options={options}
                 /> 

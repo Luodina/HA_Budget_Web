@@ -30,7 +30,10 @@ class DefaultHeader extends Component {
 
         <Nav className="d-md-down-none" navbar>
           <NavItem className="px-3">
-            <NavLink href="/">Dashboard</NavLink>
+            <NavLink to="/">Dashboard</NavLink>
+          </NavItem>
+          <NavItem className="px-3">
+            <NavLink href="#">Report</NavLink>
           </NavItem>
           <NavItem className="px-3">
             <Link to="/users">Users</Link>

@@ -9,5 +9,5 @@ app.use('/api/data', require('./api/data'));
 app.get('/*', function(req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
-console.log("listen to port:")
-app.listen(9000);
+//console.log("listen to port:")
+app.listen(3000);
