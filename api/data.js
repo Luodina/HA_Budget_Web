@@ -578,7 +578,8 @@ const data = {
     ]
 }
 router.get('/', (req, res) => {
-    res.send({ result: data });
+    console.log("!!!!")
+    res.send({ result: "data" });
 })
 
 module.exports = router;

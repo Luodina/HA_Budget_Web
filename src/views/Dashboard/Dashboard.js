@@ -710,68 +710,68 @@ class Cluster extends Component {
       ]
   }
 
-  function getLeafNodes(leafNodes, obj, dimension){   
-    if(obj.children && obj.children.length>0){
-      obj.children.forEach(function(child){getLeafNodes(leafNodes,child, dimension)});
-    } else{
-      leafNodes.push({ value: obj.name, label: obj.name, dim:dimension }  );
-    }
-  } 
+//   function getLeafNodes(leafNodes, obj, dimension){   
+//     if(obj.children && obj.children.length>0){
+//       obj.children.forEach(function(child){getLeafNodes(leafNodes,child, dimension)});
+//     } else{
+//       leafNodes.push({ value: obj.name, label: obj.name, dim:dimension }  );
+//     }
+//   } 
 
-  let leafNodesEntity = [];
-  let leafNodesType= [];
-  let a="Entity";
-  getLeafNodes(leafNodesEntity, response,"Entity");
-  a="Type";
-  getLeafNodes(leafNodesType, response,"Type")
-  //console.log("!!!!!!!",leafNodes)
+//   let leafNodesEntity = [];
+//   let leafNodesType= [];
+//   let a="Entity";
+//   getLeafNodes(leafNodesEntity, response,"Entity");
+//   a="Type";
+//   getLeafNodes(leafNodesType, response,"Type")
+//   //console.log("!!!!!!!",leafNodes)
 
-  this.setState({ data: {
-    "Entity": leafNodesEntity,
-    "Type":leafNodesType
-  }
-  })
-    // axios({
-    //   method: 'get',
-    //   // headers: {
-    //   //   'Accept': 'application/json, text/plain, */*',
-    //   //   'Content-Type': 'application/json',
-    //   //   'Origin':window.location.origin,
-    //   //   // 'TSRAuth':"xlNIOEWONXVLSDFOiuLSKNLIUAD",
-    //   //   "X-Requested-With":"XMLHttpRequest",
-    //   //   "Access-Control-Allow-Origin": "*",
-    //   //   "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
-    //   // },
-    //   //url: "http://httpbin.org/bytes/5"
-    //   //url: sysConfig.API_PREFIX + '/package-defination'
-    //   url: sysConfig.API_PREFIX + '/api/data'
-    // }).then(response => {
-    //   console.log("response.data", response)
-    //   this.setState({ data: response })
-    // })
+//   this.setState({ data: {
+//     "Entity": leafNodesEntity,
+//     "Type":leafNodesType
+//   }
+//   })
+    axios({
+      method: 'get',
+      headers: {
+        // 'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      //   'Origin':window.location.origin,
+      //   // 'TSRAuth':"xlNIOEWONXVLSDFOiuLSKNLIUAD",
+      //   "X-Requested-With":"XMLHttpRequest",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+      },
+      //url: "http://httpbin.org/bytes/5"
+      //url: sysConfig.API_PREFIX + '/package-defination'
+      url: sysConfig.API_PREFIX + '/api/data'
+    }).then(response => {
+      console.log("response.data", response)
+      this.setState({ data: response })
+    })
   }
 
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
-    console.log("ggggg")
+    
     //this.gridColumnApi.sizeColumnsToFit();
   }
 
   AddRow() {
-    console.log("here we are")
+    
     this.setState({
       isOpen: true
     })
   }
 
   onExitModal(mode,payload) {
-    console.log("here we are ExitModal", mode)
+    //console.log("here we are ExitModal", mode)
     if (mode === "add") {
       //let a = payload
       let qqq=this.state.dimData;
       qqq.push(payload);
-      console.log("here we are ExitModal", qqq)
+     // console.log("here we are ExitModal", qqq)
       this.setState({
         dimData: qqq
       })
@@ -790,7 +790,7 @@ class Cluster extends Component {
     
     // let tmp = {...this.state.dimData,...this.state.monthData};
     let rowData = this.state.dimData;
-    console.log("columnDefs", columnDefs, "rowData", rowData);
+    //console.log("columnDefs", columnDefs, "rowData", rowData);
     return (
       <div className="animated fadeIn">
         <Row>
