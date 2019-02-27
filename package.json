@@ -41,6 +41,7 @@
         "react-select": "^2.4.1",
         "react-test-renderer": "^16.7.0",
         "reactstrap": "^7.0.2",
+        "request": "^2.88.0",
         "simple-line-icons": "^2.4.1"
     },
     "devDependencies": {

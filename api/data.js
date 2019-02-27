@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const request = require('request')
 const data = {
     "id": 1,
     "name": "Entity",
@@ -579,7 +580,18 @@ const data = {
 }
 router.get('/', (req, res) => {
     console.log("!!!!")
-    res.send({ result: "data" });
+    request({
+        url: 'https://jsonplaceholder.typicode.com/posts/42',
+        method: 'GET'
+    }, function(error, response, body) {
+        if (error) {
+            console.log("!!!", error)
+            res.send({ result: "error" });
+        } else {
+            console.log("!!!", response.statusCode, body)
+            res.send({ result: "data" });
+        }
+    })
 })
 
 module.exports = router;
