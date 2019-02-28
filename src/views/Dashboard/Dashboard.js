@@ -18,6 +18,7 @@ class Cluster extends Component {
         let dw = 100;
         this.state = {
             isOpen: false,
+            rowSelection: "multiple",
             corporasssteCol: [
                 { headerName: "Scenario", field: "Scenario" },
                 { headerName: "DataType", field: "DataType" },
@@ -60,67 +61,69 @@ class Cluster extends Component {
             }, ],
             dimensions: [{
                     headerName: "Budget Nature",
-                    field: "BudgetNature",
+                    field: "budgetnature",
                     width: dw,
                     editable: true,
-                    // cellRenderer : "osRenderer",
-                    //cellEditor : "osEditor"
                 },
-                { headerName: "Budget Type", field: "BudgetType", width: dw, editable: true, "cellEditor": "agTextCellEditor" },
-                { headerName: "Entity", field: "Entity", width: dw, editable: true, "cellEditor": "agTextCellEditor" },
-                { headerName: "Analytical", field: "Analytical", width: dw, editable: true, filter: 'agTextColumnFilter' },
-                { headerName: "Section", field: "Section", width: dw, editable: true, filter: 'agTextColumnFilter' },
-                { headerName: "Type", field: "Type", width: dw, editable: true, filter: 'agTextColumnFilter' },
+                { headerName: "Budget Type", field: "budgettype", width: dw, editable: true, "cellEditor": "agTextCellEditor" },
+                { headerName: "Entity", field: "entity", width: dw, editable: true, "cellEditor": "agTextCellEditor" },
+                { headerName: "Analytical", field: "analytical", width: dw, editable: true, filter: 'agTextColumnFilter' },
+                { headerName: "Section", field: "section", width: dw, editable: true, filter: 'agTextColumnFilter' },
+                { headerName: "Type", field: "type", width: dw, editable: true, filter: 'agTextColumnFilter' },
             ],
-            dimData: [{
-                "BudgetNature": "Budget Nature",
-                "BudgetType": "Total Revised",
-                "Entity": "HKEC",
-                "Analytical": "Analytical",
-                "Type": "No_Type",
-                "Section": "No_Type",
-                field1: 1,
-                field2: 2,
-                field3: 3,
-                field4: 4,
-                field5: 5,
-                field6: 6,
-                field7: 7,
-                field8: 8,
-                field9: 9,
-                field10: 10,
-                field11: 11,
-                field12: 12
-            }],
+            dimData: [],
+            defDimData:{
+                "budgetnature": "Budget Nature",
+                "budgettype": "Total Revised",
+                "entity": "HKEC",
+                "analytical": "Analytical",
+                "section": "No_Type",
+                "type": "No_Type",
+                "apr":0,
+                "may":0,
+                "jun":0,
+                "jul":0,
+                "aug":0,
+                "sep":0,
+                "oct":0,
+                "nov":0,
+                "dec":0,
+                "jan":0,
+                "feb":0,
+                "mar":0
+                
+            },
             monthes: [
-                { headerName: "-月", field: "field1", width: mw, editable: true },
-                { headerName: "二月", field: "field2", width: mw, editable: true },
-                { headerName: "三月", field: "field3", width: mw, editable: true },
-                { headerName: "四月", field: "field4", width: mw, editable: true },
-                { headerName: "五月", field: "field5", width: mw, editable: true },
-                { headerName: "六月", field: "field6", width: mw, editable: true },
-                { headerName: "七月", field: "field7", width: mw, editable: true },
-                { headerName: "八月", field: "field8", width: mw, editable: true },
-                { headerName: "九月", field: "field9", width: mw, editable: true },
-                { headerName: "十月", field: "field10", width: mw, editable: true },
-                { headerName: "十-月", field: "field11", width: mw, editable: true },
-                { headerName: "十三月", field: "field12", width: mw, editable: true },
+                { headerName: "apr", field: "apr", width: mw, editable: true },
+                { headerName: "may", field: "may", width: mw, editable: true },
+                { headerName: "jun", field: "jun", width: mw, editable: true },
+                { headerName: "jul", field: "jul", width: mw, editable: true },
+                { headerName: "aug", field: "aug", width: mw, editable: true },
+                { headerName: "sep", field: "sep", width: mw, editable: true },
+                { headerName: "oct", field: "oct", width: mw, editable: true },
+                { headerName: "nov", field: "nov", width: mw, editable: true },
+                { headerName: "dec", field: "dec", width: mw, editable: true },
+                { headerName: "jan", field: "jan", width: mw, editable: true },
+                { headerName: "feb", field: "feb", width: mw, editable: true },
+                { headerName: "mar", field: "mar", width: mw, editable: true },
                 {
                     headerName: "Total",
                     field: "total",
                     width: dw,
                     pinned: 'right',
                     cellClass: "number-cell",
-                    valueGetter: function aPlusBValueGetter(params) {
-                        let total = Number(params.data.field1) + Number(params.data.field2) + Number(params.data.field3) +
-                            Number(params.data.field4) + Number(params.data.field5) + Number(params.data.field6) +
-                            Number(params.data.field7) + Number(params.data.field8) + Number(params.data.field9) +
-                            Number(params.data.field10) + Number(params.data.field11) + Number(params.data.field12);
-                        //let total1 = Math.floor(parseFloat(params.data.field1) + parseFloat(params.data.field2))
+                    valueGetter: function monthSumGetter(params) {
+                        let total =Number(params.data.apr) + Number(params.data.may) + Number(params.data.jun) +
+                            Number(params.data.jul) + Number(params.data.aug) + Number(params.data.sep) +
+                            Number(params.data.oct) + Number(params.data.nov) + Number(params.data.dec) +
+                            Number(params.data.jan) + Number(params.data.feb) + Number(params.data.mar);
                         return total;
                     }
                 },
             ],
+            total: 0,
+            adjustment: 0,
+            balance: 0
         }
         this.onAddRow = this.onAddRow.bind(this);
         this.onExitModal = this.onExitModal.bind(this);
@@ -707,7 +710,57 @@ class Cluster extends Component {
                 }
             ]
         }
+        let clusterData = 
+        [
+            {"id":1854,"version":0,
+            "createdAt":"2019-02-14T17:56:16",
+            "updatedAt":"2019-02-14T17:56:16",
+            "scenario":"FebBudget",
+            "datatype":"OpeningAccrual",
+            "fund":"Fund 01",
+            "approvalstatus":"Approved",
+            "itemkey":"Input",
+            "projref":"No_ProjRef",
+            "budgetversion":"Cluster",
+            "budgetnature":"R",
+            "budgettype":"Rev",
+            "entity":"703","analytical":"32001","section":"9987000","type":"00","account":"419990",
+            "years":"FY18",
+            "budgetholder":"No_BudgetHolder",
+            "apr":0,"may":0,"jun":0,"jul":0,"aug":0,"sep":0,"oct":0,"nov":0,"dec":0,"jan":0,"feb":0,"mar":195.2,"p13":0,"p14":0
+            },
 
+            {"id":1858,"version":0,
+            "createdAt":"2019-02-14T17:56:16",
+            "updatedAt":"2019-02-14T17:56:16",
+            "scenario":"FebBudget","datatype":"OpeningAccrual",
+            "fund":"Fund 01","approvalstatus":"Approved",
+            "itemkey":"Input","projref":"No_ProjRef",
+            "budgetversion":"Cluster","budgetnature":"R",
+            "budgettype":"Rev","entity":"203","analytical":"31741",
+            "section":"7007000","type":"00","account":"359990",
+            "years":"FY18","budgetholder":"No_BudgetHolder",
+            "apr":6,"may":0,"jun":6,"jul":6,"aug":0,"sep":0,"oct":0,"nov":0,"dec":0,"jan":0,"feb":0,"mar":30,"p13":0,"p14":0
+            },
+
+            {"id":1880,"version":0,"createdAt":"2019-02-14T17:56:16","updatedAt":"2019-02-14T17:56:16","scenario":"FebBudget","datatype":"OpeningAccrual","fund":"Fund 01","approvalstatus":"Approved","itemkey":"Input","projref":"No_ProjRef","budgetversion":"Cluster","budgetnature":"R","budgettype":"AllocAdj","entity":"206","analytical":"45004","section":"9987000","type":"00","account":"359990","years":"FY18","budgetholder":"No_BudgetHolder",
+            "apr":0,"may":0,"jun":0,"jul":0,"aug":0,"sep":0,"oct":0,"nov":7200,"dec":7200,"jan":-14400,
+            "feb":0,"mar":0,"p13":0,"p14":0},{"id":2068,"version":0,"createdAt":"2019-02-14T17:56:16",
+            "updatedAt":"2019-02-14T17:56:16","scenario":"FebBudget","datatype":"OpeningAccrual","fund":"Fund 01","approvalstatus":"Approved","itemkey":"Input",
+            "projref":"No_ProjRef","budgetversion":"Cluster","budgetnature":"O","budgettype":"Org","entity":"103","analytical":"47077",
+            "section":"9987000","type":"31","account":"221100","years":"FY18","budgetholder":"No_BudgetHolder","apr":150.787,"may":150.787,
+            "jun":150.787,"jul":150.787,"aug":150.787,"sep":150.787,"oct":150.787,"nov":150.787,"dec":150.787,
+            "jan":150.787,"feb":150.787,"mar":150.839,"p13":0,"p14":0},
+
+            {"id":2072,"version":0,"createdAt":"2019-02-14T17:56:16","updatedAt":"2019-02-14T17:56:16",
+            "scenario":"FebBudget","datatype":"OpeningAccrual","fund":"Fund 01","approvalstatus":"Approved",
+            "itemkey":"Input","projref":"No_ProjRef","budgetversion":"Cluster","budgetnature":"R","budgettype":"Rev",
+            "entity":"203","analytical":"44999","section":"9987001","type":"24","account":"221100","years":"FY18",
+            "budgetholder":"No_BudgetHolder",
+            "apr":0,"may":0,"jun":0,"jul":0,"aug":623.1,"sep":124.62,"oct":124.62,"nov":124.62,"dec":124.62,"jan":124.62,"feb":124.62,
+            "mar":124.62,"p13":0,"p14":0}
+        ];
+        this.setState({dimData:clusterData})
         function getLeafNodes(leafNodes, obj, dimension) {
             if (obj.children && obj.children.length > 0) {
                 obj.children.forEach(function(child) { getLeafNodes(leafNodes, child, dimension) });
@@ -718,18 +771,19 @@ class Cluster extends Component {
 
         let leafNodesEntity = [];
         let leafNodesType = [];
-        let a = "Entity";
-        getLeafNodes(leafNodesEntity, response, "Entity");
-        a = "Type";
-        getLeafNodes(leafNodesType, response, "Type")
+        let a = "entity";
+        getLeafNodes(leafNodesEntity, response, "entity");
+        a = "type";
+        getLeafNodes(leafNodesType, response, "type")
             //console.log("!!!!!!!",leafNodes)
+        
 
         this.setState({
                 data: {
-                    "Entity": leafNodesEntity,
-                    "Type": leafNodesType
+                    "entity": leafNodesEntity,
+                    "type": leafNodesType
                 },
-                balance: 290
+                //balance: 290
             })
             // axios({
             //   method: 'get',
@@ -767,9 +821,10 @@ class Cluster extends Component {
     }
 
     onRemoveSelected() {
-        var selectedData = this.gridApi.getSelectedRows();
-        var res = this.gridApi.updateRowData({ remove: selectedData });
-        console.log(res);
+        let selectedData = this.gridApi.getSelectedRows();
+        console.log(selectedData);
+        this.gridApi.updateRowData({ remove: selectedData });
+        
         var rowData = [];
         this.gridApi.forEachNode(function(node) {
             rowData.push(node.data);
@@ -779,210 +834,131 @@ class Cluster extends Component {
     }
 
     onExitModal(mode, payload) {
-        //console.log("here we are ExitModal", mode)
+        console.log("here we are ExitModal", mode, payload)
         if (mode === "add") {
-            //let a = payload
-            let qqq = this.state.dimData;
-            qqq.push(payload);
-            // console.log("here we are ExitModal", qqq)
+            let newDimData = this.state.dimData;
+            let newItem = {...this.state.defDimData, ...payload}
+            newDimData.push(newItem);
+            console.log("here we are ExitModal", newItem)
             this.setState({
-                dimData: qqq
+                dimData: newDimData,
+                total: 233
             })
-            this.gridApi.updateRowData({ add: [payload] });
+            this.gridApi.updateRowData({ add: [newItem] });
         }
         // var newItem = createNewRowData();
         // var res = this.gridApi.updateRowData({ add: [newItem] });
+        // for(){
 
+        // }
         this.setState({
             isOpen: false
-        })
+        });
     }
 
     render() {
         let columnDefs = this.state.dimensions;
         columnDefs = columnDefs.concat(this.state.monthes);
         let rowData = this.state.dimData;
-        return ( <
-            div className = "animated fadeIn" >
-            <
-            Row >
-            <
-            Col xs = "12" >
-            <
-            Card >
-            <
-            CardHeader >
-            <
-            div >
-            <
-            h5 style = {
-                { "color": "rgba(0, 0, 0, 0.54)" }
-            } > Cluster Budget Input Form < /h5> < /
-            div > <
-            /CardHeader> <
-            CardBody >
-            <
-            Row >
-            <
-            Col xs = "12" >
-            <
-            Table borderless >
-            <
-            thead >
-            <
-            /thead> <
-            tbody >
-            <
-            tr >
-            <
-            th scope = "row"
-            style = {
-                { "color": "rgba(0, 0, 0, 0.54)" }
-            } > Fund: < /th> <
-            td > Fund 01 < /td> <
-            th scope = "row"
-            style = {
-                { "color": "rgba(0, 0, 0, 0.54)" }
-            } > Scenario: < /th> <
-            td > SepBudget < /td> < /
-            tr > <
-            tr style = {
-                { "color": "rgba(0, 0, 0, 0.54)" }
-            } >
-            <
-            th colSpan = "10" > Corporate Budget < /th> < /
-            tr > <
-            tr >
-            <
-            th scope = "row"
-            style = {
-                { "color": "rgba(0, 0, 0, 0.54)" }
-            } > DataType: < /th> <
-            td > IncrementalAccrual < /td> <
-            th scope = "row"
-            style = {
-                { "color": "rgba(0, 0, 0, 0.54)" }
-            } > Budget Type: < /th> <
-            td > Total Revised < /td> <
-            th scope = "row"
-            style = {
-                { "color": "rgba(0, 0, 0, 0.54)" }
-            } > Entity: < /th> <
-            td > HKEC < /td> <
-            th scope = "row"
-            style = {
-                { "color": "rgba(0, 0, 0, 0.54)" }
-            } > Year: < /th> <
-            td > 2018 < /td> <
-            th scope = "row"
-            style = {
-                { "color": "rgba(0, 0, 0, 0.54)" }
-            } > Vesrion: < /th> <
-            td > Corporate Version < /td> < /
-            tr > <
-            tr >
-            <
-            th scope = "row"
-            style = {
-                { "color": "rgba(0, 0, 0, 0.54)", "paddingRight": "0px" }
-            } > Government Level Total: < /th> <
-            td > 300 000 < /td> < /
-            tr > <
-            tr style = {
-                { "color": "rgba(0, 0, 0, 0.54)" }
-            } >
-            <
-            th colSpan = "10" > Cluster Budget < /th> < /
-            tr > <
-            /tbody> < /
-            Table > <
-            /Col> < /
-            Row > <
-            Row >
-            <
-            Col xs = "12" >
-            <
-            Button style = {
-                { "float": "right" }
-            }
-            color = "danger"
-            onClick = {
-                () => this.onRemoveSelected()
-            } > Delete Row < /Button>{' '} <
-            Button style = {
-                { "float": "right", "marginRight": "10px" }
-            }
-            color = "primary"
-            onClick = {
-                () => this.onAddRow()
-            } > Add Row < /Button>{' '} < /
-            Col > {
-                this.state.isOpen &&
-                <
-                ModalAddNew isOpen = { this.state.isOpen }
-                dimensions = { this.state.dimensions }
-                onExitModal = { this.onExitModal }
-                data = { this.state.data }
-                />
-            } <
-            /Row> <
-            Row style = {
-                { "marginTop": "20px" }
-            } >
-            <
-            Col xs = "12" >
-            <
-            div className = "ag-theme-balham"
-            style = {
-                {
-                    "minWidth": "100px",
-                    "width": "100%",
-                    "height": "300px"
-                }
-            } >
-            <
-            AgGridReact onGridReady = { this.onGridReady }
-            columnDefs = { columnDefs }
-            defaultColDef = {
-                { filter: true }
-            }
-            rowData = { rowData } >
-            <
-            /AgGridReact> < /
-            div > <
-            /Col> < /
-            Row > <
-            Row style = {
-                { "marginTop": "20px" }
-            } >
-            <
-            Col xs = "7" >
-            <
-            /Col> <
-            Col xs = "3"
-            style = {
-                { "color": "rgba(0, 0, 0, 0.54)" }
-            } >
-            <
-            Label
-            for = "balance" > Current Cluster Level Balance: < /Label>                         <
-            Label
-            for = "adjustment" > Total Cluster Adjustment: < /Label>                        <
-            Label
-            for = "budget" > Total Cluster Level Budget: < /Label>                            < /
-            Col > <
-            Col xs = "1" >
-            <
-            Label > 234564 < /Label>                         <
-            Label > 43224 < /Label>                        <
-            Label > 555555 < /Label> < /
-            Col > <
-            /Row> < /
-            CardBody > <
-            /Card> < /
-            Col > <
-            /Row> < /
-            div >
+        return ( 
+            <div className = "animated fadeIn" >
+                <Row>
+                    <Col xs = "12" >
+                        <Card>
+                            <CardHeader>
+                            <div>
+                            <h5 style = {
+                                { "color": "rgba(0, 0, 0, 0.54)" }
+                            } > Cluster Budget Input Form </h5> </div> </CardHeader> <CardBody>
+                                <Row>
+                                    <Col xs = "12" >
+                                        <Table borderless >
+                                            <thead >
+                                            </thead> 
+                                            <tbody >
+                                            <tr>
+                                                <th scope = "row" style = {{ "color": "rgba(0, 0, 0, 0.54)" }} > Fund: </th> 
+                                                <td > Fund 01 </td> 
+                                                <th scope = "row" style = {{ "color": "rgba(0, 0, 0, 0.54)" }} > Scenario: </th> 
+                                                <td> SepBudget </td> 
+                                            </tr> 
+                                            <tr style = {{ "color": "rgba(0, 0, 0, 0.54)" }} >
+                                            <th colSpan = "10" > Corporate Budget </th> 
+                                            </tr > 
+                                            <tr>
+                                                <th scope = "row" style = {{ "color": "rgba(0, 0, 0, 0.54)" }} > DataType: </th> 
+                                                <td > IncrementalAccrual </td> 
+                                                <th scope = "row" style = {{ "color": "rgba(0, 0, 0, 0.54)" }} > Budget Type: </th> 
+                                                <td > Total Revised </td> 
+                                                <th scope = "row" style = {{ "color": "rgba(0, 0, 0, 0.54)" }} > Entity: </th> 
+                                                <td > HKEC </td> 
+                                                <th scope = "row" style = {{ "color": "rgba(0, 0, 0, 0.54)" }} > Year: </th> 
+                                                <td > 2018 </td> 
+                                                <th scope = "row" style = {{ "color": "rgba(0, 0, 0, 0.54)" }} > Vesrion: </th> 
+                                                <td > Corporate Version </td> 
+                                            </tr > 
+                                            <tr >
+                                                <th scope = "row" style = {{ "color": "rgba(0, 0, 0, 0.54)", "paddingRight": "0px" }} > Government Level Total: </th> 
+                                                <td > 300 000 </td> 
+                                            </tr > 
+                                            <tr style = {{ "color": "rgba(0, 0, 0, 0.54)" }} >
+                                            <th colSpan = "10" > Cluster Budget </th> 
+                                        </tr > 
+                                        </tbody> 
+                                        </Table > 
+                                    </Col> 
+                                </Row> 
+                                <Row>
+                                    <Col xs = "12" >
+                                        <Button style = {{ "float": "right" }} color = "danger" onClick = {() => this.onRemoveSelected()} > Delete Row </Button>{' '} 
+                                        <Button style = {{ "float": "right", "marginRight": "10px" }} color = "primary" onClick = {() => this.onAddRow()} > Add Row </Button>{' '} 
+                                    </Col > {
+                                        this.state.isOpen &&
+                                        <ModalAddNew isOpen = { this.state.isOpen }
+                                            dimensions = { this.state.dimensions }
+                                            onExitModal = { this.onExitModal }
+                                            data = { this.state.data }
+                                        />} 
+                                </Row> 
+                                <Row style = {{ "marginTop": "20px" }} >
+                                    <Col xs = "12" >
+                                        <div className = "ag-theme-balham" style = {{
+                                                "minWidth": "100px",
+                                                "width": "100%",
+                                                "height": "300px"
+                                            }} >
+                                            <AgGridReact 
+                                                rowSelection={this.state.rowSelection}
+                                                onGridReady = { this.onGridReady }
+                                                columnDefs = { columnDefs }
+                                                rowMultiSelectWithClick={true}
+                                                defaultColDef = {
+                                                    { filter: true }
+                                                }
+                                                rowData = { rowData } >
+                                            </AgGridReact> 
+                                        </div > 
+                                    </Col> 
+                                </Row> 
+                                <Row style = {{ "marginTop": "20px" }} >
+                                    <Col xs = "7" >
+                                    </Col> 
+                                    <Col xs = "3" style = {{ "color": "rgba(0, 0, 0, 0.54)" }} >
+                                            <Label for = "balance" > Current Cluster Level Balance: </Label>                         
+                                            <Label for = "adjustment" > Total Cluster Adjustment: </Label>                        
+                                            <Label for = "budget" > Total Cluster Level Budget: </Label>                            
+                                    </Col> 
+                                    <Col xs = "1" >
+                                        <div style={{"marginBottom": "0.5rem"}} > {this.state.total} </div>                         
+                                        <div style={{"marginBottom": "0.5rem"}} > {this.state.adjustment} </div>                        
+                                        <div style={{"marginBottom": "0.5rem"}} > {this.state.balance}  </div> 
+                                    </Col > 
+                                </Row> 
+                            </CardBody > 
+                        </Card> 
+                    </Col>
+                </Row> 
+            </div >
         );
     }
 }
