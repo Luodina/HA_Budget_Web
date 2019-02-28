@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Button, Table } from 'reactstrap';
-import OSRenderer from "./Components/osRenderer";
-import OSEditor from "./Components/osEditor";
+// import OSRenderer from "./Components/osRenderer";
+// import OSEditor from "./Components/osEditor";
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
 import ModalAddNew from './Components/Modal';
 
-import { sysConfig } from "../../../_config";
-import axios from 'axios'
+// import { sysConfig } from "../../../_config";
+// import axios from 'axios'
 
 class Cluster extends Component {
   constructor(props) {

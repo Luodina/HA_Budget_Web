@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardHeader, Col, Row, Button, Table, Form, FormGroup, Label, Input } from 'reactstrap';
-import OSRenderer from "./Components/osRenderer";
-import OSEditor from "./Components/osEditor";
+import { Card, CardBody, CardHeader, Col, Row, Button, Table, Label } from 'reactstrap';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-
 import ModalAddNew from './Components/Modal';
 
 import { sysConfig } from "../../_config";
@@ -19,46 +16,6 @@ class Cluster extends Component {
         this.state = {
             isOpen: false,
             rowSelection: "multiple",
-            corporasssteCol: [
-                { headerName: "Scenario", field: "Scenario" },
-                { headerName: "DataType", field: "DataType" },
-                { headerName: "Fund", field: "Fund" },
-                { headerName: "ApprovalStatus", field: "ApprovalStatus" },
-                { headerName: "ItemKey", field: "ItemKey" },
-                { headerName: "ProjRef", field: "ProjRef" },
-                { headerName: "Version", field: "Version" },
-                { headerName: "Type", field: "Type" },
-                { headerName: "Section", field: "Section" },
-                { headerName: "Account", field: "Account" },
-                { headerName: "Budget Nature", field: "BudgetNature" },
-                { headerName: "Budget Type", field: "BudgetType" },
-                { headerName: "Entity", field: "Entity" },
-                { headerName: "Analytical", field: "Analytical" },
-                { headerName: "Section", field: "Section1" },
-                { headerName: "Year", field: "Year" },
-                { headerName: "Period", field: "Period" },
-                { headerName: "Government Level Total", field: "GovernmentLevelTotal" },
-            ],
-            corporateData: [{
-                "Scenario": "SepBudget",
-                "DataType": "IncrementalAccrual",
-                "Fund": "Fund 01",
-                "ApprovalStatus": "Approved",
-                "ItemKey": "Input",
-                "ProjRef": "Total Programs",
-                "Version": "Corporate Version",
-                "Type": "No_Type",
-                "Section": "No_Section",
-                "Account": "Lump Sum",
-                "Budget Nature": "BudgetNature",
-                "Budget Type": "Total Revised",
-                "Entity": "HKEC",
-                "Analytical": "Analytical",
-                "Section1": "No_Type",
-                "Year": "FY18",
-                "Period": "YearTotal",
-                "GovernmentLevelTotal": 300
-            }, ],
             dimensions: [{
                     headerName: "Budget Nature",
                     field: "budgetnature",
@@ -90,8 +47,7 @@ class Cluster extends Component {
                 "dec":0,
                 "jan":0,
                 "feb":0,
-                "mar":0
-                
+                "mar":0    
             },
             monthes: [
                 { headerName: "apr", field: "apr", width: mw, editable: true },
@@ -121,15 +77,15 @@ class Cluster extends Component {
                     }
                 },
             ],
-            total: 0,
+            budget: 0,
             adjustment: 0,
             balance: 0
         }
         this.onAddRow = this.onAddRow.bind(this);
         this.onExitModal = this.onExitModal.bind(this);
         this.onGridReady = this.onGridReady.bind(this);
-        this.getBalance = this.getBalance.bind(this);
         this.onRemoveSelected = this.onRemoveSelected.bind(this);
+        this.getAdjustment = this.getAdjustment.bind(this);
     }
 
     componentDidMount() {
@@ -761,6 +717,7 @@ class Cluster extends Component {
             "mar":124.62,"p13":0,"p14":0}
         ];
         this.setState({dimData:clusterData})
+
         function getLeafNodes(leafNodes, obj, dimension) {
             if (obj.children && obj.children.length > 0) {
                 obj.children.forEach(function(child) { getLeafNodes(leafNodes, child, dimension) });
@@ -771,42 +728,28 @@ class Cluster extends Component {
 
         let leafNodesEntity = [];
         let leafNodesType = [];
-        let a = "entity";
-        getLeafNodes(leafNodesEntity, response, "entity");
-        a = "type";
-        getLeafNodes(leafNodesType, response, "type")
-            //console.log("!!!!!!!",leafNodes)
         
-
+        getLeafNodes(leafNodesEntity, response, response["name"].toLowerCase());
+        getLeafNodes(leafNodesType, response, "type")
+       
         this.setState({
                 data: {
                     "entity": leafNodesEntity,
                     "type": leafNodesType
-                },
-                //balance: 290
+                }
             })
-            // axios({
-            //   method: 'get',
-            // //   headers: {
-            // //     // 'Accept': 'application/json, text/plain, */*',
-            // //     'Content-Type': 'application/json',
-            // //   //   'Origin':window.location.origin,
-            // //   //   // 'TSRAuth':"xlNIOEWONXVLSDFOiuLSKNLIUAD",
-            // //   //   "X-Requested-With":"XMLHttpRequest",
-            // //     "Access-Control-Allow-Origin": "*",
-            // //     "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
-            // //   },
-            //   url: sysConfig.API_PREFIX + '/api/data'
-            // }).then(response => {
-            //   //console.log("response.data", response)
-            //   this.setState({ data: response })
-            // })
+        axios({
+            method: 'get',
+            url: sysConfig.API_PREFIX + '/api/data'
+        }).then(response => {
+            console.log("response.data", response)
+            //this.setState({ data: response })
+        })
     }
 
     onGridReady(params) {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
-        this.gridApi.addAggFunc("sum", this.sumFunction);
         //this.gridColumnApi.sizeColumnsToFit();
     }
 
@@ -816,21 +759,32 @@ class Cluster extends Component {
         })
     }
 
-    getBalance() {
-
+    getAdjustment(){
+        let adjSum = 0;
+        this.gridApi.forEachNode(function(params) {
+            let sum =Number(params.data.apr) + Number(params.data.may) + Number(params.data.jun) +
+            Number(params.data.jul) + Number(params.data.aug) + Number(params.data.sep) +
+            Number(params.data.oct) + Number(params.data.nov) + Number(params.data.dec) +
+            Number(params.data.jan) + Number(params.data.feb) + Number(params.data.mar);
+            adjSum =adjSum+sum;
+        });
+        console.log("adjSum Data:", adjSum);
+        let newBgt=Number(this.state.balance)+adjSum;
+        this.setState({
+            adjustment: adjSum,
+            budget: newBgt
+        })
     }
 
     onRemoveSelected() {
         let selectedData = this.gridApi.getSelectedRows();
         console.log(selectedData);
         this.gridApi.updateRowData({ remove: selectedData });
-        
-        var rowData = [];
-        this.gridApi.forEachNode(function(node) {
-            rowData.push(node.data);
-        });
-        console.log("Row Data:");
-        console.log(rowData);
+        this.getAdjustment();
+        // var rowData = [];
+        // this.gridApi.forEachNode(function(node) {
+        //     rowData.push(node.data);
+        // });
     }
 
     onExitModal(mode, payload) {
@@ -846,11 +800,6 @@ class Cluster extends Component {
             })
             this.gridApi.updateRowData({ add: [newItem] });
         }
-        // var newItem = createNewRowData();
-        // var res = this.gridApi.updateRowData({ add: [newItem] });
-        // for(){
-
-        // }
         this.setState({
             isOpen: false
         });
@@ -867,9 +816,7 @@ class Cluster extends Component {
                         <Card>
                             <CardHeader>
                             <div>
-                            <h5 style = {
-                                { "color": "rgba(0, 0, 0, 0.54)" }
-                            } > Cluster Budget Input Form </h5> </div> </CardHeader> <CardBody>
+                            <h5 style = {{ "color": "rgba(0, 0, 0, 0.54)" }} > Cluster Budget Input Form </h5> </div> </CardHeader> <CardBody>
                                 <Row>
                                     <Col xs = "12" >
                                         <Table borderless >
@@ -880,7 +827,7 @@ class Cluster extends Component {
                                                 <th scope = "row" style = {{ "color": "rgba(0, 0, 0, 0.54)" }} > Fund: </th> 
                                                 <td > Fund 01 </td> 
                                                 <th scope = "row" style = {{ "color": "rgba(0, 0, 0, 0.54)" }} > Scenario: </th> 
-                                                <td> SepBudget </td> 
+                                                <td> FebBudget </td> 
                                             </tr> 
                                             <tr style = {{ "color": "rgba(0, 0, 0, 0.54)" }} >
                                             <th colSpan = "10" > Corporate Budget </th> 
@@ -898,7 +845,7 @@ class Cluster extends Component {
                                                 <td > Corporate Version </td> 
                                             </tr > 
                                             <tr >
-                                                <th scope = "row" style = {{ "color": "rgba(0, 0, 0, 0.54)", "paddingRight": "0px" }} > Government Level Total: </th> 
+                                                <th scope = "row" style = {{ "color": "rgba(0, 0, 0, 0.54)", "paddingRight": "0px" }} > Total Corp Level Budget : </th> 
                                                 <td > 300 000 </td> 
                                             </tr > 
                                             <tr style = {{ "color": "rgba(0, 0, 0, 0.54)" }} >
@@ -932,6 +879,10 @@ class Cluster extends Component {
                                                 onGridReady = { this.onGridReady }
                                                 columnDefs = { columnDefs }
                                                 rowMultiSelectWithClick={true}
+                                                onCellEditingStarted= {function (event) {
+                                                    console.log('cellEditingStarted');
+                                                }}
+                                                onCellEditingStopped = {this.getAdjustment}
                                                 defaultColDef = {
                                                     { filter: true }
                                                 }
@@ -944,14 +895,14 @@ class Cluster extends Component {
                                     <Col xs = "7" >
                                     </Col> 
                                     <Col xs = "3" style = {{ "color": "rgba(0, 0, 0, 0.54)" }} >
-                                            <Label for = "balance" > Current Cluster Level Balance: </Label>                         
-                                            <Label for = "adjustment" > Total Cluster Adjustment: </Label>                        
-                                            <Label for = "budget" > Total Cluster Level Budget: </Label>                            
+                                        <Label for = "balance" > Current Cluster Level Balance: </Label>                         
+                                        <Label for = "adjustment" > Total Cluster Adjustment: </Label>                        
+                                        <Label for = "budget" > Total Cluster Level Budget: </Label>                            
                                     </Col> 
                                     <Col xs = "1" >
-                                        <div style={{"marginBottom": "0.5rem"}} > {this.state.total} </div>                         
+                                        <div style={{"marginBottom": "0.5rem"}} > {this.state.balance} </div>                         
                                         <div style={{"marginBottom": "0.5rem"}} > {this.state.adjustment} </div>                        
-                                        <div style={{"marginBottom": "0.5rem"}} > {this.state.balance}  </div> 
+                                        <div style={{"marginBottom": "0.5rem"}} > {this.state.budget}  </div> 
                                     </Col > 
                                 </Row> 
                             </CardBody > 

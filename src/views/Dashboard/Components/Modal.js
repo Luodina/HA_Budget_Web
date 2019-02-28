@@ -37,16 +37,15 @@ class ModalAddNew extends React.Component {
     const content = dimensions.map((item,i)=>{
         console.log("item.field", item.field)
         let options =  data[item.field];
-        let xxx=item.field;
-            return(
-            <div key ={i}>
-                {item.headerName}
-                <Select
-                    value={selectedOption.xxx}
-                    onChange={this.handleChange}
-                    options={options}
-                /> 
-            </div>)
+          return(
+          <div key ={i}>
+              {item.headerName}
+              <Select
+                  value={selectedOption.xxx}
+                  onChange={this.handleChange}
+                  options={options}
+              /> 
+          </div>)
         });
     return (
       <div>
