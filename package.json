@@ -28,6 +28,7 @@
         "enzyme-adapter-react-16": "^1.7.1",
         "flag-icon-css": "^3.2.1",
         "font-awesome": "^4.7.0",
+        "node-fetch": "^2.3.0",
         "node-sass": "^4.11.0",
         "prop-types": "^15.6.2",
         "rc-tree": "^1.14.9",
