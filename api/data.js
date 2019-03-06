@@ -690,34 +690,42 @@ router.get('/', (req, res) => {
     // });
 });
 
-function getInputArr(data, method) {
-    return fetch(recBgtInputsUrl,
+function getInputArr(data, method, url) {
+    return fetch(url,
         {
             method: method,
             body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json' }
-        }).then(res => res.json())
+        })//.then(res => res.json())
 }
 router.post('/', (req, res) => {
     let newInputs = req.body.new;
     let uptInputs = req.body.updated;
     let promiseArr = [];
+    let recBgtInutsUrl = "http://ho-it-oc-job8:8180/api/v1/request/xxx";
+
     for (let i = 0; i < newInputs.length; i++) {
-        promiseArr.push(getInputArr(newInputs[i], 'POST'));
+        let a = getInputArr(newInputs[i], 'POST', recBgtInutsUrl)
+        console.log('a', a)
+        promiseArr.push(a);
     }
     for (let i = 0; i < uptInputs.length; i++) {
-        promiseArr.push(getInputArr(uptInputs[i], 'PUT'));
+        promiseArr.push(getInputArr(uptInputs[i], 'PUT', recBgtInutsUrl));
     }
-    res.send({ result: promiseArr, status: true });
+    console.log('promiseArr', promiseArr)
+    Promise.all(promiseArr).then(json => {
+        console.log(json);
+        res.send({ result: json, status: true });
+    });
     // console.log("POST=====>>>>>", req.body.data)
     // let newInputs = req.body.new;
     // let uptInputs = req.body.updated;
     // let promiseArr = [];
     // for (let i = 0; i < newInputs.length; i++) {
-    //     promiseArr.push(getInputArr(newInputs[i], 'POST'));
+    //     promiseArr.push(getInputArr(newInputs[i], 'POST',recBgtInutsUrl));
     // }
     // for (let i = 0; i < uptInputs.length; i++) {
-    //     promiseArr.push(getInputArr(uptInputs[i], 'PUT'));
+    //     promiseArr.push(getInputArr(uptInputs[i], 'PUT',recBgtInutsUrl));
     // }
     // Promise.all(promiseArr).then(json => {
     //     console.log(json);
